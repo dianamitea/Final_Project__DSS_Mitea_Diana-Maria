@@ -116,11 +116,8 @@ function getCsrfToken(): string
  * Verify the CSRF token supplied in a POST request.
  * Terminates with 403 if the token is missing or invalid.
  */
-function verifyCsrfToken(): void
+function verifyCsrfToken(?string $token = null): bool
 {
-    $token = $_POST['csrf_token'] ?? '';
-    if (!hash_equals(getCsrfToken(), $token)) {
-        http_response_code(403);
-        die('Invalid CSRF token. Please go back and try again.');
-    }
+    $token = $token ?? ($_POST['csrf_token'] ?? '');
+    return hash_equals(getCsrfToken(), $token);
 }

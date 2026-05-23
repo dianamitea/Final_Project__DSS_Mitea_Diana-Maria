@@ -101,16 +101,16 @@ include __DIR__ . '/../includes/header.php';
           <small class="text-muted d-block">Delivery Address</small>
           <?= nl2br(htmlspecialchars($order['delivery_address'], ENT_QUOTES, 'UTF-8')) ?>
         </div>
-        <?php if ($order['card_message']): ?>
+        <?php if (!empty($order['card_message'] ?? '')): ?>
         <div class="col-12">
           <small class="text-muted d-block">Card Message</small>
           <em><?= htmlspecialchars($order['card_message'], ENT_QUOTES, 'UTF-8') ?></em>
         </div>
         <?php endif; ?>
-        <?php if ($order['special_requests']): ?>
+        <?php if (!empty($order['special_notes'] ?? '')): ?>
         <div class="col-12">
-          <small class="text-muted d-block">Special Requests</small>
-          <?= nl2br(htmlspecialchars($order['special_requests'], ENT_QUOTES, 'UTF-8')) ?>
+          <small class="text-muted d-block">Special Notes</small>
+          <?= nl2br(htmlspecialchars($order['special_notes'], ENT_QUOTES, 'UTF-8')) ?>
         </div>
         <?php endif; ?>
       </div>
@@ -213,7 +213,7 @@ include __DIR__ . '/../includes/header.php';
       <div class="form-section-title">Payment</div>
       <div class="mb-2">
         <small class="text-muted d-block">Method</small>
-        <strong><?= htmlspecialchars(ucfirst(str_replace('_',' ',$order['payment_method'])), ENT_QUOTES, 'UTF-8') ?></strong>
+        <strong><?= htmlspecialchars(ucfirst(str_replace('_',' ',($order['payment_method'] ?? 'N/A'))), ENT_QUOTES, 'UTF-8') ?></strong>
       </div>
       <div>
         <small class="text-muted d-block">Status</small>
@@ -230,13 +230,13 @@ include __DIR__ . '/../includes/header.php';
         <?php foreach ($history as $h): ?>
         <div class="timeline-item d-flex gap-3 mb-3">
           <div class="flex-shrink-0">
-            <span class="status-badge status-<?= htmlspecialchars($h['status'], ENT_QUOTES, 'UTF-8') ?> small">
-              <?= htmlspecialchars(ucfirst(str_replace('_',' ',$h['status'])), ENT_QUOTES, 'UTF-8') ?>
+            <span class="status-badge status-<?= htmlspecialchars($h['new_status'], ENT_QUOTES, 'UTF-8') ?> small">
+              <?= htmlspecialchars(ucfirst(str_replace('_',' ',$h['new_status'])), ENT_QUOTES, 'UTF-8') ?>
             </span>
           </div>
           <div>
-            <?php if ($h['note']): ?>
-              <div class="small"><?= htmlspecialchars($h['note'], ENT_QUOTES, 'UTF-8') ?></div>
+            <?php if (!empty($h['notes'] ?? '')): ?>
+              <div class="small"><?= htmlspecialchars($h['notes'], ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
             <div class="text-muted" style="font-size:.75rem">
               by <?= htmlspecialchars($h['changed_by'] ?? 'System', ENT_QUOTES, 'UTF-8') ?>

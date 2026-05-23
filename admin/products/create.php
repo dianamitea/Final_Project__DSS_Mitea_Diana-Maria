@@ -38,13 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['image']['name'])) {
             $file    = $_FILES['image'];
             $allowed = ['image/jpeg','image/png','image/gif','image/webp'];
-            $maxSize = 5 * 1024 * 1024;
+            $maxSize = 20 * 1024 * 1024;
             if ($file['error'] !== UPLOAD_ERR_OK) {
                 $errors['image'] = 'Upload error code ' . $file['error'];
             } elseif (!in_array(mime_content_type($file['tmp_name']), $allowed, true)) {
                 $errors['image'] = 'Only JPEG, PNG, GIF, WEBP allowed.';
             } elseif ($file['size'] > $maxSize) {
-                $errors['image'] = 'File exceeds 5MB limit.';
+                $errors['image'] = 'File exceeds 20MB limit.';
             } else {
                 $ext        = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                 $newName    = uniqid('prod_') . '.' . $ext;
@@ -144,7 +144,7 @@ include __DIR__ . '/../includes/header.php';
         <input type="file" name="image" class="form-control <?= isset($errors['image'])?'is-invalid':'' ?>"
                accept="image/*" id="imageInput">
         <?php if (isset($errors['image'])): ?><div class="invalid-feedback"><?= htmlspecialchars($errors['image'], ENT_QUOTES, 'UTF-8') ?></div><?php endif; ?>
-        <small class="text-muted mt-1 d-block">JPEG/PNG/GIF/WEBP, max 5MB</small>
+        <small class="text-muted mt-1 d-block">JPEG/PNG/GIF/WEBP, max 20MB</small>
         <div id="imagePreview" class="mt-2" style="display:none">
           <img id="previewImg" src="" alt="Preview" class="img-fluid rounded" style="max-height:180px">
         </div>

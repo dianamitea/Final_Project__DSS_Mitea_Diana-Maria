@@ -60,7 +60,7 @@ try {
         $note = "Status changed from {$current['status']} to {$status}";
     }
     $conn->prepare(
-        "INSERT INTO status_history (order_id, status, changed_by, note) VALUES (?,?,?,?)"
+        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,?,?,?)"
     )->execute_query([$id, $status, $adminName, $note]);
 
     $conn->commit();

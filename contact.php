@@ -2,10 +2,39 @@
 /**
  * contact.php — Public contact page
  */
+require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/auth.php';
 
 $pageTitle = 'Contact Us';
 $base      = '/Final_Project__DSS_Mitea_Diana-Maria';
+$conn      = getDbConnection();
+
+$success = false;
+$errors  = [];
+$form    = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken()) { $errors[] = 'Security check failed. Please try again.'; }
+
+    $form['name']    = trim($_POST['name']    ?? '');
+    $form['email']   = trim($_POST['email']   ?? '');
+    $form['subject'] = trim($_POST['subject'] ?? '');
+    $form['message'] = trim($_POST['message'] ?? '');
+
+    if ($form['name'] === '')                          $errors[] = 'Name is required.';
+    if (!filter_var($form['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'A valid email is required.';
+    if ($form['subject'] === '')                       $errors[] = 'Subject is required.';
+    if (strlen($form['message']) < 10)                 $errors[] = 'Message must be at least 10 characters.';
+
+    if (empty($errors)) {
+        $conn->prepare(
+            "INSERT INTO contact_messages (name, email, subject, message) VALUES (?,?,?,?)"
+        )->execute_query([$form['name'], $form['email'], $form['subject'], $form['message']]);
+        $success = true;
+        $form    = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
+    }
+}
+
 include __DIR__ . '/includes/header.php';
 ?>
 
@@ -48,34 +77,55 @@ include __DIR__ . '/includes/header.php';
       <div class="col-md-7">
         <div class="card p-4 shadow-sm">
           <h5 class="fw-semibold mb-3">Send us a Message</h5>
+
+          <?php if ($success): ?>
+            <div class="alert alert-success">
+              <i class="fa fa-check-circle me-2"></i>
+              Thank you! Your message has been sent. We'll get back to you shortly.
+            </div>
+          <?php else: ?>
+
+          <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger small">
+              <?php foreach ($errors as $e): ?>
+                <div><i class="fa fa-exclamation-circle me-1"></i><?= htmlspecialchars($e, ENT_QUOTES, 'UTF-8') ?></div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+
           <div class="alert alert-info small">
             <i class="fa fa-info-circle me-2"></i>
             For orders, please use the <a href="<?= $base ?>/order.php">Order page</a>.
             This form is for general enquiries only.
           </div>
-          <form>
+          <form method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label">Your Name</label>
-                <input type="text" class="form-control" placeholder="Full name">
+                <input type="text" name="name" class="form-control" placeholder="Full name"
+                       value="<?= htmlspecialchars($form['name'], ENT_QUOTES, 'UTF-8') ?>" required>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-control" placeholder="email@example.com">
+                <input type="email" name="email" class="form-control" placeholder="email@example.com"
+                       value="<?= htmlspecialchars($form['email'], ENT_QUOTES, 'UTF-8') ?>" required>
               </div>
               <div class="col-12">
                 <label class="form-label">Subject</label>
-                <input type="text" class="form-control" placeholder="How can we help?">
+                <input type="text" name="subject" class="form-control" placeholder="How can we help?"
+                       value="<?= htmlspecialchars($form['subject'], ENT_QUOTES, 'UTF-8') ?>" required>
               </div>
               <div class="col-12">
                 <label class="form-label">Message</label>
-                <textarea class="form-control" rows="5" placeholder="Your message…"></textarea>
+                <textarea name="message" class="form-control" rows="5" placeholder="Your message…" required><?= htmlspecialchars($form['message'], ENT_QUOTES, 'UTF-8') ?></textarea>
               </div>
             </div>
             <button type="submit" class="btn btn-primary mt-3">
               <i class="fa fa-paper-plane me-2"></i>Send Message
             </button>
           </form>
+          <?php endif; ?>
         </div>
       </div>
     </div>

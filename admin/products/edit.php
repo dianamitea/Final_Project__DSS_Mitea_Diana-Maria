@@ -50,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors['image'] = 'Upload error.';
             } elseif (!in_array(mime_content_type($file['tmp_name']), $allowed, true)) {
                 $errors['image'] = 'Only JPEG/PNG/GIF/WEBP allowed.';
-            } elseif ($file['size'] > 5*1024*1024) {
-                $errors['image'] = 'Max 5MB.';
+            } elseif ($file['size'] > 20*1024*1024) {
+                $errors['image'] = 'Max 20MB.';
             } else {
                 $ext       = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                 $newName   = uniqid('prod_') . '.' . $ext;
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   category_id=?, image_path=?, is_featured=?, is_active=? WHERE id=?"
             );
             $priceF = (float)$price;
-            $u->bind_param('ssdiiisii', $name, $desc, $priceF, $stock, $catId, $imagePath, $featured, $active, $id);
+            $u->bind_param('ssdiisiii', $name, $desc, $priceF, $stock, $catId, $imagePath, $featured, $active, $id);
             if ($u->execute()) {
                 setFlash('success', 'Product updated.');
                 header("Location: $adminBase/products/index.php");

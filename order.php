@@ -47,7 +47,7 @@ $values  = [
 // ── Handle POST ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // CSRF
-    verifyCsrfToken();
+    if (!verifyCsrfToken()) { http_response_code(403); die('Invalid CSRF token.'); }
 
     // Read & sanitize
     $values['customer_name']    = trim($_POST['customer_name']    ?? '');

@@ -18,7 +18,7 @@ $errors = [];
 $values = ['first_name'=>'','last_name'=>'','email'=>'','phone'=>'','address'=>'','city'=>''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verifyCsrfToken();
+    if (!verifyCsrfToken()) { http_response_code(403); die('Invalid CSRF token.'); }
 
     $values['first_name'] = trim($_POST['first_name'] ?? '');
     $values['last_name']  = trim($_POST['last_name']  ?? '');

@@ -91,6 +91,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <i class="fa fa-envelope me-1"></i>Contact
           </a>
         </li>
+        <?php if (isCustomerLoggedIn()): ?>
+        <li class="nav-item">
+          <a class="nav-link <?= $currentPage === 'profile.php' ? 'active' : '' ?>"
+             href="<?= $base ?>/profile.php">
+            <i class="fa fa-user-circle me-1"></i>My Profile
+          </a>
+        </li>
+        <?php endif; ?>
       </ul>
       <a href="<?= $base ?>/order.php" class="btn btn-light btn-sm ms-3 fw-semibold">
         <i class="fa fa-gift me-1"></i>Send Flowers

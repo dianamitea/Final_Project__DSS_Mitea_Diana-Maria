@@ -37,6 +37,9 @@ function isActive(string $segment): string {
     <a href="<?= $adminBase ?>/customers/index.php" class="sidebar-link <?= isActive('/customers/') ?>">
       <i class="fa fa-users"></i><span>Customers</span>
     </a>
+    <a href="<?= $adminBase ?>/messages/index.php" class="sidebar-link <?= isActive('/messages/') ?>">
+      <i class="fa fa-envelope"></i><span>Messages</span>
+    </a>
 
     <div class="sidebar-section-label">Business Tools</div>
     <a href="<?= $adminBase ?>/reports/index.php" class="sidebar-link <?= isActive('/reports/') ?>">

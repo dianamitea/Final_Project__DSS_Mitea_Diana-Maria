@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payMethod  = $_POST['payment_method']        ?? 'cash';
         $payStatus  = $_POST['payment_status']        ?? 'unpaid';
         $cardMsg    = trim($_POST['card_message']     ?? '');
-        $specReq    = trim($_POST['special_requests'] ?? '');
+        $specReq    = trim($_POST['special_notes'] ?? '');
         $status     = $_POST['status']                ?? $order['status'];
 
         if (strlen($name) < 3)     $errors['customer_name']    = 'Name must be at least 3 characters.';
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $u = $conn->prepare(
                 "UPDATE orders SET customer_name=?, customer_email=?, customer_phone=?,
                   delivery_address=?, delivery_date=?, occasion=?, payment_method=?,
-                  payment_status=?, card_message=?, special_requests=?, status=?
+                  payment_status=?, card_message=?, special_notes=?, status=?
                  WHERE id=?"
             );
             $u->bind_param('sssssssssssi',
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($status !== $order['status']) {
                     $adminName = $_SESSION['admin_name'];
                     $conn->prepare(
-                        "INSERT INTO status_history (order_id, status, changed_by, note) VALUES (?,?,?,?)"
+                        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,?,?,?)"
                     )->execute_query([$id, $status, $adminName, "Status changed via order edit."]);
                 }
                 setFlash('success', 'Order updated successfully.');
@@ -167,7 +167,7 @@ include __DIR__ . '/../includes/header.php';
           </div>
           <div class="col-12">
             <label class="form-label">Special Requests</label>
-            <textarea name="special_requests" rows="2" class="form-control"><?= htmlspecialchars($order['special_requests'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+            <textarea name="special_notes" rows="2" class="form-control"><?= htmlspecialchars($order['special_notes'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
           </div>
         </div>
       </div>

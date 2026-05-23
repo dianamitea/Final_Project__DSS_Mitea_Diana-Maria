@@ -26,7 +26,7 @@ $form   = [
     'payment_method'   => 'cash',
     'payment_status'   => 'unpaid',
     'card_message'     => '',
-    'special_requests' => '',
+    'special_notes'    => '',
     'items'            => [],
 ];
 
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'payment_method'   => $_POST['payment_method']        ?? 'cash',
             'payment_status'   => $_POST['payment_status']        ?? 'unpaid',
             'card_message'     => trim($_POST['card_message']     ?? ''),
-            'special_requests' => trim($_POST['special_requests'] ?? ''),
+            'special_notes'    => trim($_POST['special_notes']    ?? ''),
         ]);
 
         // Collect items
@@ -104,21 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $s = $conn->prepare(
                         "INSERT INTO orders (order_code, customer_name, customer_email, customer_phone,
                           delivery_address, delivery_date, occasion, payment_method, payment_status,
-                          card_message, special_requests, status, total_price)
+                          card_message, special_notes, status, total_price)
                          VALUES ('TEMP','?','?','?','?','?','?','?','?','?','?','new',?)"
                     );
                     // rebuild with correct placeholders
                     $s = $conn->prepare(
                         "INSERT INTO orders (order_code, customer_name, customer_email, customer_phone,
                           delivery_address, delivery_date, occasion, payment_method, payment_status,
-                          card_message, special_requests, status, total_price)
+                          card_message, special_notes, status, total_price)
                          VALUES ('TEMP',?,?,?,?,?,?,?,?,?,?,'new',?)"
                     );
                     $s->bind_param('ssssssssssd',
                         $form['customer_name'], $form['customer_email'], $form['customer_phone'],
                         $form['delivery_address'], $form['delivery_date'], $form['occasion'],
                         $form['payment_method'], $form['payment_status'],
-                        $form['card_message'], $form['special_requests'], $totalPrice
+                        $form['card_message'], $form['special_notes'], $totalPrice
                     );
                     $s->execute();
                     $orderId   = $conn->insert_id;
@@ -245,7 +245,7 @@ include __DIR__ . '/../includes/header.php';
           </div>
           <div class="col-12">
             <label class="form-label">Special Requests</label>
-            <textarea name="special_requests" rows="2" class="form-control"><?= htmlspecialchars($form['special_requests'], ENT_QUOTES, 'UTF-8') ?></textarea>
+            <textarea name="special_notes" rows="2" class="form-control"><?= htmlspecialchars($form['special_notes'], ENT_QUOTES, 'UTF-8') ?></textarea>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ $conn      = getDbConnection();
 $error     = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verifyCsrfToken();
+    if (!verifyCsrfToken()) { $error = 'Security check failed. Please try again.'; }
 
     $email    = trim($_POST['email']    ?? '');
     $password = $_POST['password'] ?? '';
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['customer_email'] = $email;
 
             // Redirect to requested page or home
-            $redirect = isset($_GET['redirect']) ? filter_var($_GET['redirect'], FILTER_SANITIZE_URL) : $base . '/index.php';
+            $redirect = isset($_GET['redirect']) ? filter_var($_GET['redirect'], FILTER_SANITIZE_URL) : $base . '/profile.php';
             // Only allow relative redirects within the project
             if (!str_starts_with($redirect, '/')) {
                 $redirect = $base . '/index.php';

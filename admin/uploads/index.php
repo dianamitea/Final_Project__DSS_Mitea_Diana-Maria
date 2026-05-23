@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
             'image/webp' => 'webp',
             'application/pdf' => 'pdf'
         ];
-        $maxSize = 5 * 1024 * 1024;
+        $maxSize = 20 * 1024 * 1024;
         $mime    = mime_content_type($file['tmp_name']);
 
         if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
         } elseif (!array_key_exists($mime, $allowed)) {
             $errors[] = 'File type not allowed. Accepted: JPEG, PNG, GIF, WEBP, PDF.';
         } elseif ($file['size'] > $maxSize) {
-            $errors[] = 'File exceeds 5MB limit.';
+            $errors[] = 'File exceeds 20MB limit.';
         } else {
             $ext       = $allowed[$mime];
             $safeName  = uniqid('upload_') . '_' . preg_replace('/[^a-z0-9._-]/i', '_', basename($file['name']));
@@ -101,7 +101,7 @@ include __DIR__ . '/../includes/header.php';
     <div class="col-md-4">
       <label class="form-label">File *</label>
       <input type="file" name="upload_file" class="form-control" accept="image/*,.pdf" required>
-      <small class="text-muted">JPEG, PNG, GIF, WEBP, PDF — max 5MB</small>
+      <small class="text-muted">JPEG, PNG, GIF, WEBP, PDF — max 20MB</small>
     </div>
     <div class="col-md-4">
       <label class="form-label">Link to Order (optional)</label>
