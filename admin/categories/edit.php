@@ -31,9 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (strlen($name) < 2) $errors['name'] = 'Name required.';
 
         if (empty($errors)) {
-            $conn->prepare(
-                "UPDATE categories SET name=?, description=?, sort_order=? WHERE id=?"
-            )->execute_query([$name, $desc, $sortOrder, $id]);
+            $conn->execute_query(
+                "UPDATE categories SET name=?, description=?, sort_order=? WHERE id=?",
+                [$name, $desc, $sortOrder, $id]
+            );
             setFlash('success', 'Category updated.');
             header("Location: $adminBase/categories/index.php");
             exit;

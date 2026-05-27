@@ -9,14 +9,14 @@ $conn           = getDbConnection();
 
 // Mark as read
 if (isset($_GET['read']) && is_numeric($_GET['read'])) {
-    $conn->prepare("UPDATE contact_messages SET is_read=1 WHERE id=?")->execute_query([(int)$_GET['read']]);
+    $conn->execute_query("UPDATE contact_messages SET is_read=1 WHERE id=?", [(int)$_GET['read']]);
     header("Location: $adminBase/messages/index.php");
     exit;
 }
 
 // Delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'] ?? '') && isset($_POST['delete_id'])) {
-    $conn->prepare("DELETE FROM contact_messages WHERE id=?")->execute_query([(int)$_POST['delete_id']]);
+    $conn->execute_query("DELETE FROM contact_messages WHERE id=?", [(int)$_POST['delete_id']]);
     setFlash('success', 'Message deleted.');
     header("Location: $adminBase/messages/index.php");
     exit;

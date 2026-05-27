@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $orderId   = $conn->insert_id;
                     $orderCode = 'ORD-' . str_pad($orderId, 4, '0', STR_PAD_LEFT);
 
-                    $conn->prepare("UPDATE orders SET order_code=? WHERE id=?")->execute_query([$orderCode, $orderId]);
+                    $conn->execute_query("UPDATE orders SET order_code=? WHERE id=?", [$orderCode, $orderId]);
 
                     // Insert order items
                     $si = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, unit_price, subtotal) VALUES (?,?,?,?,?)");
@@ -144,9 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $admin_id   = (int)$_SESSION['admin_id'];
                     $adminName  = $_SESSION['admin_name'];
                     $noteText   = "Order created by admin: $adminName";
-                    $conn->prepare(
-                        "INSERT INTO status_history (order_id, status, changed_by, note) VALUES (?,'new',?,?)"
-                    )->execute_query([$orderId, $adminName, $noteText]);
+                    $conn->execute_query(
+                        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,'new',?,?)",
+                        [$orderId, $adminName, $noteText]
+                    );
 
                     $conn->commit();
 

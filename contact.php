@@ -27,9 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($form['message']) < 10)                 $errors[] = 'Message must be at least 10 characters.';
 
     if (empty($errors)) {
-        $conn->prepare(
-            "INSERT INTO contact_messages (name, email, subject, message) VALUES (?,?,?,?)"
-        )->execute_query([$form['name'], $form['email'], $form['subject'], $form['message']]);
+        $conn->execute_query(
+            "INSERT INTO contact_messages (name, email, subject, message) VALUES (?,?,?,?)",
+            [$form['name'], $form['email'], $form['subject'], $form['message']]
+        );
         $success = true;
         $form    = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
     }

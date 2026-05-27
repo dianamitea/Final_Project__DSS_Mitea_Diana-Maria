@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
     if ($check->get_result()->fetch_assoc()['n'] > 0) {
         setFlash('warning', 'Cannot delete — product is referenced by existing orders. Deactivate it instead.');
     } else {
-        $conn->prepare("DELETE FROM products WHERE id = ?")->execute_query([$id]);
+        $conn->execute_query("DELETE FROM products WHERE id = ?", [$id]);
         setFlash('success', "Product \"{$prod['name']}\" deleted.");
     }
     header("Location: $adminBase/products/index.php");

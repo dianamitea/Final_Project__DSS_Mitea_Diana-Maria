@@ -29,9 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $slug .= '-' . time();
             }
 
-            $conn->prepare(
-                "INSERT INTO categories (name, slug, description, sort_order) VALUES (?,?,?,?)"
-            )->execute_query([$form['name'], $slug, $form['description'], $form['sort_order']]);
+            $conn->execute_query(
+                "INSERT INTO categories (name, slug, description, sort_order) VALUES (?,?,?,?)",
+                [$form['name'], $slug, $form['description'], $form['sort_order']]
+            );
 
             setFlash('success', 'Category "' . htmlspecialchars($form['name'], ENT_QUOTES, 'UTF-8') . '" created.');
             header("Location: $adminBase/categories/index.php");

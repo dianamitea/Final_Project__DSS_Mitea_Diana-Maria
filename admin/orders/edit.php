@@ -61,9 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Log status change if status changed
                 if ($status !== $order['status']) {
                     $adminName = $_SESSION['admin_name'];
-                    $conn->prepare(
-                        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,?,?,?)"
-                    )->execute_query([$id, $status, $adminName, "Status changed via order edit."]);
+                    $conn->execute_query(
+                        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,?,?,?)",
+                        [$id, $status, $adminName, "Status changed via order edit."]
+                    );
                 }
                 setFlash('success', 'Order updated successfully.');
                 header("Location: $adminBase/orders/view.php?id=$id");

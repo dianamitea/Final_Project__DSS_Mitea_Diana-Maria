@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
     if ($cnt->get_result()->fetch_assoc()['n'] > 0) {
         setFlash('warning', 'Cannot delete category — it still has products. Reassign them first.');
     } else {
-        $conn->prepare("DELETE FROM categories WHERE id = ?")->execute_query([$id]);
+        $conn->execute_query("DELETE FROM categories WHERE id = ?", [$id]);
         setFlash('success', "Category \"{$cat['name']}\" deleted.");
     }
     header("Location: $adminBase/categories/index.php");

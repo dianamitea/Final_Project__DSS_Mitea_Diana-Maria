@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
     $fullPath = dirname(__DIR__, 2) . '/' . $file['file_path'];
     if (file_exists($fullPath)) @unlink($fullPath);
 
-    $conn->prepare("DELETE FROM uploaded_files WHERE id = ?")->execute_query([$id]);
+    $conn->execute_query("DELETE FROM uploaded_files WHERE id = ?", [$id]);
     setFlash('success', 'File deleted.');
     header("Location: $adminBase/uploads/index.php");
     exit;

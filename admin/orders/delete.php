@@ -23,10 +23,10 @@ if (!$order) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'] ?? '')) {
     $conn->begin_transaction();
     try {
-        $conn->prepare("DELETE FROM status_history WHERE order_id = ?")->execute_query([$id]);
-        $conn->prepare("DELETE FROM uploaded_files WHERE order_id = ?")->execute_query([$id]);
-        $conn->prepare("DELETE FROM order_items WHERE order_id = ?")->execute_query([$id]);
-        $conn->prepare("DELETE FROM orders WHERE id = ?")->execute_query([$id]);
+        $conn->execute_query("DELETE FROM status_history WHERE order_id = ?", [$id]);
+        $conn->execute_query("DELETE FROM uploaded_files WHERE order_id = ?", [$id]);
+        $conn->execute_query("DELETE FROM order_items WHERE order_id = ?", [$id]);
+        $conn->execute_query("DELETE FROM orders WHERE id = ?", [$id]);
         $conn->commit();
         setFlash('success', "Order {$order['order_code']} deleted.");
     } catch (Exception $e) {

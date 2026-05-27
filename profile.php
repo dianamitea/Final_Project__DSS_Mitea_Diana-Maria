@@ -39,9 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'updat
     if ($firstName === '' || $lastName === '') {
         $updateError = 'First and last name are required.';
     } else {
-        $conn->prepare(
-            "UPDATE customers SET first_name=?, last_name=?, phone=?, address=?, city=? WHERE id=?"
-        )->execute_query([$firstName, $lastName, $phone, $address, $city, $customerId]);
+        $conn->execute_query(
+            "UPDATE customers SET first_name=?, last_name=?, phone=?, address=?, city=? WHERE id=?",
+            [$firstName, $lastName, $phone, $address, $city, $customerId]
+        );
 
         $_SESSION['customer_name'] = $firstName . ' ' . $lastName;
         $cust['first_name'] = $firstName;

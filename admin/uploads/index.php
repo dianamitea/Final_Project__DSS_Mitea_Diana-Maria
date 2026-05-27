@@ -48,13 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
                 $origName = htmlspecialchars(basename($file['name']), ENT_QUOTES, 'UTF-8');
                 $uploader = $_SESSION['admin_name'];
 
-                $conn->prepare(
+                $conn->execute_query(
                     "INSERT INTO uploaded_files (order_id, file_name, original_name, file_path, file_type, file_size, uploaded_by)
-                     VALUES (?,?,?,?,?,?,?)"
-                )->execute_query([
-                    $orderId ?: null, $safeName, $origName, $relPath,
-                    $mime, $file['size'], $uploader
-                ]);
+                     VALUES (?,?,?,?,?,?,?)",
+                    [$orderId ?: null, $safeName, $origName, $relPath, $mime, $file['size'], $uploader]
+                );
 
                 setFlash('success', 'File "' . $origName . '" uploaded successfully.');
                 header("Location: $adminBase/uploads/index.php");

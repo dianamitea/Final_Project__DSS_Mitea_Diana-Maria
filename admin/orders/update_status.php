@@ -53,15 +53,16 @@ if (!$current) {
 // Update
 $conn->begin_transaction();
 try {
-    $conn->prepare("UPDATE orders SET status=? WHERE id=?")->execute_query([$status, $id]);
+    $conn->execute_query("UPDATE orders SET status=? WHERE id=?", [$status, $id]);
 
     $adminName = $_SESSION['admin_name'] ?? 'Admin';
     if (!$note) {
         $note = "Status changed from {$current['status']} to {$status}";
     }
-    $conn->prepare(
-        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,?,?,?)"
-    )->execute_query([$id, $status, $adminName, $note]);
+    $conn->execute_query(
+        "INSERT INTO status_history (order_id, new_status, changed_by, notes) VALUES (?,?,?,?)",
+        [$id, $status, $adminName, $note]
+    );
 
     $conn->commit();
     echo json_encode(['success' => true, 'status' => $status]);

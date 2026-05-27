@@ -18,10 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCsrfToken($_POST['csrf_token'
     if (strlen($currency) === 3 && $rate > 0) {
         $key  = 'saved_rate_' . $currency;
         $val  = json_encode(['currency' => $currency, 'rate' => $rate, 'saved_at' => date('Y-m-d H:i:s')]);
-        $conn->prepare(
+        $conn->execute_query(
             "INSERT INTO api_cache (cache_key, response_data, cached_at) VALUES (?,?, NOW())
-             ON DUPLICATE KEY UPDATE response_data=VALUES(response_data), cached_at=NOW()"
-        )->execute_query([$key, $val]);
+             ON DUPLICATE KEY UPDATE response_data=VALUES(response_data), cached_at=NOW()",
+            [$key, $val]
+        );
         setFlash('success', "Rate 1 $currency = " . number_format(1 / $rate, 4) . " RON saved.");
     }
     header("Location: $adminBase/currency.php");
