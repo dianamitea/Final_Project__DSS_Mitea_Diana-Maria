@@ -53,7 +53,7 @@ try:
 
         # ── Sheet 1: Customers ──────────────────────────────────
         df_cust = pd.read_sql(
-            "SELECT id, full_name, email, phone, address, created_at FROM customers ORDER BY created_at DESC",
+            "SELECT id, CONCAT(first_name,' ',last_name) AS full_name, email, phone, address, created_at FROM customers ORDER BY created_at DESC",
             conn
         )
         df_cust.to_excel(writer, sheet_name="Customers", index=False)
@@ -64,7 +64,7 @@ try:
             """SELECT o.id, o.order_code, o.customer_name, o.customer_email, o.customer_phone,
                       o.delivery_address, o.delivery_date, o.occasion, o.status,
                       o.payment_method, o.payment_status, o.total_price,
-                      o.card_message, o.special_requests, o.created_at
+                      o.card_message, o.special_notes, o.created_at
                FROM orders o ORDER BY o.created_at DESC""",
             conn
         )
