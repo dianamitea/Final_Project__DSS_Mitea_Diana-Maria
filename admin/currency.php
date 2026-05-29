@@ -74,7 +74,7 @@ include __DIR__ . '/includes/header.php';
         <?php if ($cached): ?>
           <?php
           $cachedData = json_decode($cached['response_data'], true);
-          $rates      = $cachedData['rates'] ?? [];
+          $rates      = $cachedData['conversion_rates'] ?? $cachedData['rates'] ?? [];
           ?>
           <table class="table table-hover mb-0">
             <thead><tr><th>Currency</th><th>Code</th><th class="text-end">1 RON =</th><th class="text-end">1 unit = RON</th><th class="text-center">Save</th></tr></thead>

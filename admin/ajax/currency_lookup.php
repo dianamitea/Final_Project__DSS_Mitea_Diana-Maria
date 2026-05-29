@@ -33,16 +33,15 @@ if ($cached) {
     $data = json_decode($cached['response_data'], true);
     echo json_encode([
         'success'   => true,
-        'rates'     => $data['rates'] ?? [],
-        'base'      => $data['base_code'] ?? 'RON',
-        'source'    => 'cache',
+    'rates'     => $data['conversion_rates'] ?? $data['rates'] ?? [],
         'fetched_at'=> $cached['cached_at']
     ]);
     exit;
 }
 
 // ── Fetch from API ──
-$apiUrl = 'https://open.er-api.com/v6/latest/RON';
+$apiKey = '4d8fb9af73c6015614fd7b32';
+$apiUrl = 'https://v6.exchangerate-api.com/v6/' . $apiKey . '/latest/RON';
 $ch     = curl_init();
 curl_setopt_array($ch, [
     CURLOPT_URL            => $apiUrl,
@@ -87,7 +86,7 @@ $upsert->execute();
 // Return selected currencies (relative to RON)
 echo json_encode([
     'success'   => true,
-    'rates'     => $data['rates'] ?? [],
+    'rates'     => $data['conversion_rates'] ?? $data['rates'] ?? [],
     'base'      => $data['base_code'] ?? 'RON',
     'source'    => 'api',
     'fetched_at'=> date('Y-m-d H:i:s')

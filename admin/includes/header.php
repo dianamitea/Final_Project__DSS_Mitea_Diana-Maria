@@ -24,6 +24,8 @@ $publicBase     = '/Final_Project__DSS_Mitea_Diana-Maria';
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <!-- Admin CSS -->
   <link href="<?= $publicBase ?>/assets/css/admin.css" rel="stylesheet">
+  <!-- jQuery (loaded in head so inline page scripts can use it) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <!-- Chart.js (loaded in head so inline chart scripts can use it) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 </head>
